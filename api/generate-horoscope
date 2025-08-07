@@ -1,0 +1,57 @@
+export default async function handler(request, response) {
+    // Allow only POST requests
+    if (request.method !== 'POST') {
+        response.setHeader('Allow', ['POST']);
+        return response.status(405).end(`Method ${request.method} Not Allowed`);
+    }
+
+    // Get the API Key from environment variables
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        return response.status(500).json({ error: "API key is not configured on the server." });
+    }
+
+    const { sign, date } = request.body;
+    if (!sign || !date) {
+        return response.status(400).json({ error: "Missing 'sign' or 'date' in request body." });
+    }
+
+    const prompt = `
+      צור תחזית אסטרולוגית יומית, קצרה ומעוררת השראה למזל ${sign.name} (${sign.english}) לתאריך ${date}.
+      התחזית צריכה להיות באורך של 2-3 משפטים, בסגנון חיובי, ולהתייחס בקצרה לאחד או שניים מהתחומים: אהבה, קריירה, כספים או רווחה אישית.
+      כתוב בעברית רהוטה. אל תוסיף כותרת או את שם המזל בתשובה.
+    `;
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+    try {
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                temperature: 0.8,
+                topP: 0.9,
+            },
+        };
+
+        const apiResponse = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!apiResponse.ok) {
+            const errorBody = await apiResponse.text();
+            console.error("Google API Error:", errorBody);
+            throw new Error(`Google API request failed with status ${apiResponse.status}`);
+        }
+
+        const result = await apiResponse.json();
+        const horoscopeText = result.candidates?.[0]?.content?.parts?.[0]?.text.trim() || "שגיאה ביצירת התחזית. נסו שוב.";
+        
+        return response.status(200).json({ horoscope: horoscopeText });
+
+    } catch (error) {
+        console.error('Error in serverless function:', error);
+        return response.status(500).json({ horoscope: "אופס, הכוכבים לא מסתדרים כרגע. נסה שוב מאוחר יותר." });
+    }
+}
