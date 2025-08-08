@@ -1,6 +1,0 @@
-{
-  "name": "secure-horoscope-app",
-  "version": "1.0.0",
-  "description": "A secure horoscope app using Vercel Serverless Functions.",
-  "private": true
-}
