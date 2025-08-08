@@ -53,14 +53,16 @@ async function generateHoroscopeForSign(sign, dateStr) {
 
 // החלק הזה נשאר כמעט זהה
 export default async function handler(request, response) {
-    // ## חשוב! הפעל מחדש את האבטחה אחרי שהכל עובד ##
+    // ## בדיקת האבטחה החדשה ##
     
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    // קבל את הסיסמה מהכותרת ש-Vercel שולחת אוטומטית
+    const cronSecret = request.headers.get('x-vercel-cron-secret');
+
+    // השווה אותה למשתנה הסביבה שלך
+    if (cronSecret !== process.env.CRON_SECRET) {
         return response.status(401).json({ message: 'Unauthorized' });
     }
     
-
     try {
         const todayStr = new Date().toLocaleDateString('en-CA');
         console.log(`Starting daily horoscope generation for ${todayStr} using Groq`);
@@ -85,5 +87,3 @@ export default async function handler(request, response) {
         return response.status(500).json({ message: "Failed to update horoscopes." });
     }
 }
-
-
