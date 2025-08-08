@@ -10,13 +10,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* ======================== */
+        /* === התיקון החדש כאן === */
+        /* ======================== */
+
+        /* שלב 1: מאפשרים לגוף הדף לגלול בעת הצורך */
         body {
             font-family: 'Heebo', sans-serif;
             background-color: #0c0a1a;
             background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.2), transparent),
                 radial-gradient(circle at bottom left, rgba(44, 62, 80, 0.2), transparent);
             background-attachment: fixed;
-            overflow: hidden;
+            /* הסרנו את ההגדרה שמונעת גלילה מכאן */
+        }
+        
+        body.modal-open {
+            overflow: hidden; /* נוסיף את ההגדרה הזו עם JavaScript רק כשהפופאפ סגור */
         }
 
         #wheel-container {
@@ -77,6 +86,7 @@
             transition: opacity 0.3s ease;
         }
 
+        /* שלב 2: מאפשרים לפופאפ לגלול יחד עם הדף */
         #horoscope-modal {
             position: fixed;
             top: 0;
@@ -87,37 +97,19 @@
             backdrop-filter: blur(10px);
             z-index: 50;
             display: flex;
-            align-items: center;
+            /* הסרנו את מרכוז הפריטים כדי לאפשר גלילה מההתחלה */
             justify-content: center;
-            padding: 1rem;
+            padding: 2rem 1rem; /* הוספנו ריווח עליון ותחתון */
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
+            overflow-y: auto; /* מאפשרים לפופאפ עצמו לגלול */
         }
 
         #horoscope-modal.visible {
             opacity: 1;
             visibility: visible;
         }
-
-        /* ======================== */
-        /* === התיקון החדש כאן === */
-        /* ======================== */
-        
-        /* שלב 1: מגדירים את קופסת התוכן כעמודה גמישה עם גובה מוגבל */
-        #horoscope-content {
-            display: flex;
-            flex-direction: column; /* מסדרים את האלמנטים אחד מתחת לשני */
-            max-height: 90vh;      /* גובה מקסימלי של 90% מהמסך */
-        }
-        
-        /* שלב 2: מגדירים שרק אזור הטקסט יגדל ויגלול */
-        #modal-text {
-            overflow-y: auto;  /* מוסיף פס גלילה רק אם התוכן ארוך מדי */
-            flex-shrink: 1;    /* מאפשר לאזור הטקסט "להצטמצם" בתוך המ容器 */
-            padding-right: 1rem; /* מוסיף קצת ריווח כדי שהגלילה לא תסתיר את הטקסט */
-        }
-
 
         .loader {
             border: 4px solid rgba(255, 255, 255, 0.2);
@@ -136,7 +128,7 @@
     </style>
 </head>
 
-<body class="text-white">
+<body class="text-white modal-open">
 
     <div id="main-content" class="container mx-auto p-4 sm:p-8 flex flex-col items-center justify-center min-h-screen">
         <header class="text-center mb-8">
@@ -151,7 +143,7 @@
     </div>
 
     <div id="horoscope-modal">
-        <div id="horoscope-content" class="text-center max-w-2xl w-full p-8 rounded-lg bg-black bg-opacity-20 relative my-auto">
+        <div id="horoscope-content" class="text-center max-w-2xl w-full p-8 rounded-lg bg-black bg-opacity-20 relative">
             <button id="close-modal" class="absolute top-4 right-4 text-3xl text-gray-400 hover:text-white z-10">&times;</button>
             <div id="modal-symbol" class="text-7xl mb-4"></div>
             <h2 id="modal-title" class="text-4xl font-bold mb-4"></h2>
@@ -176,6 +168,7 @@
         const dateElement = document.getElementById('currentDate');
         const modal = document.getElementById('horoscope-modal');
         const closeModalBtn = document.getElementById('close-modal');
+        const bodyEl = document.body;
 
         function displayHebrewDate() {
             const today = new Date();
@@ -207,6 +200,8 @@
 
         async function displayHoroscope(sign) {
             modal.classList.add('visible');
+            bodyEl.classList.remove('modal-open'); // מאפשרים גלילה
+
             document.getElementById('modal-symbol').textContent = sign.symbol;
             document.getElementById('modal-title').textContent = sign.name;
 
@@ -237,9 +232,12 @@
             }
         }
 
-        closeModalBtn.addEventListener('click', () => {
+        function closeModal() {
             modal.classList.remove('visible');
-        });
+            bodyEl.classList.add('modal-open'); // מונעים גלילה שוב
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
 
         document.addEventListener('DOMContentLoaded', () => {
             displayHebrewDate();
