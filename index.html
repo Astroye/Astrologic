@@ -102,10 +102,11 @@
             visibility: visible;
         }
         
-        /* הוספנו את הקוד הזה כדי לתקן את הגלילה */
-        #horoscope-content {
-            max-height: 85vh;
-            overflow-y: auto;
+        /* ## התיקון החדש והממוקד ## */
+        #modal-text {
+            max-height: 250px;  /* מגדיר גובה מקסימלי רק לאזור הטקסט */
+            overflow-y: auto;   /* מוסיף פס גלילה רק לאזור הטקסט אם צריך */
+            padding-left: 1rem; /* מוסיף קצת ריווח כדי שפס הגלילה לא יצמד לטקסט */
         }
 
         .loader {
@@ -147,7 +148,7 @@
 
             <h3 class="text-xl font-semibold text-purple-300 mb-2">התחזית היומית שלך:</h3>
             <div id="modal-text" class="text-lg text-gray-200 leading-relaxed min-h-[80px]">
-            </div>
+                </div>
 
             <hr class="my-6 border-gray-600">
 
@@ -214,6 +215,7 @@
 
         async function getHoroscopeText(sign) {
             try {
+                // שים לב שעדכנתי את הנתיב כאן כך שיכלול את הסיומת .js
                 const response = await fetch(`/api/get-horoscope.js?sign=${sign.english.toLowerCase()}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
