@@ -101,6 +101,12 @@
             opacity: 1;
             visibility: visible;
         }
+        
+        /* הוספנו את הקוד הזה כדי לתקן את הגלילה */
+        #horoscope-content {
+            max-height: 85vh;
+            overflow-y: auto;
+        }
 
         .loader {
             border: 4px solid rgba(255, 255, 255, 0.2);
@@ -152,10 +158,8 @@
     </div>
 
     <script type="module">
-        // 1. ייבוא של רשימת המזלות מהקובץ החיצוני
         import { zodiacSigns } from './lib/zodiac.js';
 
-        // 2. כל שאר הקוד שלך נשאר כמעט זהה
         const wheelContainer = document.getElementById('wheel-container');
         const centralDisplay = document.getElementById('central-display');
         const dateElement = document.getElementById('currentDate');
@@ -210,7 +214,7 @@
 
         async function getHoroscopeText(sign) {
             try {
-                const response = await fetch(`/api/get-horoscope?sign=${sign.english.toLowerCase()}`);
+                const response = await fetch(`/api/get-horoscope.js?sign=${sign.english.toLowerCase()}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -226,12 +230,12 @@
             modal.classList.remove('visible');
         });
 
-        // 3. הפעלת הפונקציות כאשר הדף נטען
         document.addEventListener('DOMContentLoaded', () => {
             displayHebrewDate();
             createWheel();
         });
     </script>
+
 </body>
 
 </html>
