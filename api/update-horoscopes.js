@@ -54,12 +54,12 @@ async function generateHoroscopeForSign(sign, dateStr) {
 // החלק הזה נשאר כמעט זהה
 export default async function handler(request, response) {
     // ## חשוב! הפעל מחדש את האבטחה אחרי שהכל עובד ##
-    /*
+    
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return response.status(401).json({ message: 'Unauthorized' });
     }
-    */
+    
 
     try {
         const todayStr = new Date().toLocaleDateString('en-CA');
@@ -85,3 +85,4 @@ export default async function handler(request, response) {
         return response.status(500).json({ message: "Failed to update horoscopes." });
     }
 }
+
