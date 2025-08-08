@@ -23,7 +23,7 @@ async function generateHoroscopeForSign(sign, dateStr) {
             }
         ],
         temperature: 0.7,
-        max_tokens: 150
+        max_tokens: 500
     };
 
     const response = await fetch(apiUrl, {
@@ -85,4 +85,5 @@ export default async function handler(request, response) {
         return response.status(500).json({ message: "Failed to update horoscopes." });
     }
 }
+
 
