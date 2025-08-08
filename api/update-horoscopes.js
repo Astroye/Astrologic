@@ -29,12 +29,13 @@ async function generateHoroscopeForSign(sign, dateStr) {
 
 // הפונקציה הראשית שה-Cron Job מפעיל
 export default async function handler(request, response) {
+    /*
     // אבטחה: ודא שהבקשה מגיעה מה-Cron Job של Vercel ולא ממשתמש רגיל
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
        return response.status(401).json({ message: 'Unauthorized' });
     }
-
+*/
     try {
         const todayStr = new Date().toLocaleDateString('en-CA'); // פורמט: YYYY-MM-DD
         console.log(`Starting daily horoscope generation for ${todayStr}`);
@@ -63,5 +64,6 @@ export default async function handler(request, response) {
     }
 
 }
+
 
 
