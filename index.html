@@ -10,22 +10,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* ======================== */
-        /* === התיקון החדש כאן === */
-        /* ======================== */
-
-        /* שלב 1: מאפשרים לגוף הדף לגלול בעת הצורך */
         body {
             font-family: 'Heebo', sans-serif;
             background-color: #0c0a1a;
             background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.2), transparent),
                 radial-gradient(circle at bottom left, rgba(44, 62, 80, 0.2), transparent);
             background-attachment: fixed;
-            /* הסרנו את ההגדרה שמונעת גלילה מכאן */
         }
-        
+
         body.modal-open {
-            overflow: hidden; /* נוסיף את ההגדרה הזו עם JavaScript רק כשהפופאפ סגור */
+            overflow: hidden;
         }
 
         #wheel-container {
@@ -86,7 +80,6 @@
             transition: opacity 0.3s ease;
         }
 
-        /* שלב 2: מאפשרים לפופאפ לגלול יחד עם הדף */
         #horoscope-modal {
             position: fixed;
             top: 0;
@@ -97,13 +90,13 @@
             backdrop-filter: blur(10px);
             z-index: 50;
             display: flex;
-            /* הסרנו את מרכוז הפריטים כדי לאפשר גלילה מההתחלה */
             justify-content: center;
-            padding: 2rem 1rem; /* הוספנו ריווח עליון ותחתון */
+            align-items: flex-start; /* התיקון שהוספנו */
+            padding: 2rem 1rem;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
-            overflow-y: auto; /* מאפשרים לפופאפ עצמו לגלול */
+            overflow-y: auto;
         }
 
         #horoscope-modal.visible {
@@ -150,7 +143,7 @@
 
             <h3 class="text-xl font-semibold text-purple-300 mb-2">התחזית היומית שלך:</h3>
             <div id="modal-text" class="text-lg text-gray-200 leading-relaxed">
-                </div>
+            </div>
 
             <hr class="my-6 border-gray-600">
 
