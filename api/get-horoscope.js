@@ -1,8 +1,10 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(request, response) {
-    const { searchParams } = new URL(request.url);
-    const sign = searchParams.get('sign'); // למשל: 'aries'
+    // Correctly construct the full URL before parsing
+    const fullUrl = new URL(request.url, `https://${request.headers.host}`);
+    const { searchParams } = fullUrl;
+    const sign = searchParams.get('sign'); // e.g., 'aries'
 
     if (!sign) {
         return response.status(400).json({ error: 'Sign parameter is missing' });
@@ -15,6 +17,7 @@ export default async function handler(request, response) {
         if (horoscopeText) {
             return response.status(200).json({ horoscope: horoscopeText });
         } else {
+            // This is the message you were seeing
             return response.status(404).json({ horoscope: 'לא נמצאה תחזית עבור מזל זה. נסה שוב מאוחר יותר.' });
         }
     } catch (error) {
