@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv';
 // ודא שיצרת את הקובץ הזה בתיקיית lib
-import { zodiacSigns } from '../../lib/zodiac.js'; 
+import { zodiacSigns } from '../lib/zodiac.js'; 
 
 // פונקציית עזר פנימית לייצר תחזית למזל בודד
 async function generateHoroscopeForSign(sign, dateStr) {
@@ -61,4 +61,5 @@ export default async function handler(request, response) {
         console.error("A critical error occurred during the cron job:", error);
         return response.status(500).json({ message: "Failed to update horoscopes." });
     }
+
 }
