@@ -56,8 +56,8 @@ export default async function handler(request, response) {
     // ## בדיקת האבטחה החדשה ##
     
     // קבל את הסיסמה מהכותרת ש-Vercel שולחת אוטומטית
-    const cronSecret = request.headers.get('x-vercel-cron-secret');
-
+    const cronSecret = request.headers['x-vercel-cron-secret'];
+    
     // השווה אותה למשתנה הסביבה שלך
     if (cronSecret !== process.env.CRON_SECRET) {
         return response.status(401).json({ message: 'Unauthorized' });
@@ -87,3 +87,4 @@ export default async function handler(request, response) {
         return response.status(500).json({ message: "Failed to update horoscopes." });
     }
 }
+
